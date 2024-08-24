@@ -5,7 +5,7 @@ It is currently being hosted on a free tier Google Cloud compute instance.
 ### Features
 - [x] Google Sheets and Excel Function lookup
 - [x] Parroting commands
-- [ ] [sheets.wiki] lookup
+- [x] [sheets.wiki] lookup
 
 ### Contributing
 If you would like to contribute to this project, please fork the repository and submit a pull request.
@@ -23,3 +23,9 @@ key=YOUR_DISCORD_BOT_KEY
 ```
 
 From there, you should be able to simply run `python3 bot.py` and the bot will start up.
+
+### Files
+
+- `bot.py`: The main bot file
+- 'excel.csv' and 'gsheets.csv': The files that the bot reads from to get the function information
+
