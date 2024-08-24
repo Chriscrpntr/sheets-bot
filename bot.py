@@ -2,6 +2,24 @@ import discord
 import csv
 from dotenv import load_dotenv
 import os
+from urllib.request import urlopen
+import xmltodict
+from thefuzz import fuzz
+from thefuzz import process
+
+# Load the sitemap from the Sheets Wiki
+file = urlopen('https://sheets.wiki/sitemap.xml')
+data = file.read()
+file.close()
+
+data = xmltodict.parse(data)['urlset']['url']
+for i in range(len(data)):
+    data[i] = data[i]['loc'].replace('https://sheets.wiki/', '')
+
+def search(query):
+    query = query.lower()
+    result = process.extractOne(query, data)
+    return 'https://sheets.wiki/' + result[0]
 
 load_dotenv()
 
@@ -59,6 +77,11 @@ async def on_message(message):
                             f"Syntax: `{func_info['Syntax']}`\n"
                             f"More info: {func_info['Link']}")
                 await message.channel.send(response)
+        elif split[0] == 'search':
+            query = ' '.join(split[1:])
+            result = search(query)
+            await message.channel.send(result)
+
         else:
             await message.channel.send("Sorry, I don't recognize that command.")
 
