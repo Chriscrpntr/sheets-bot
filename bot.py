@@ -58,7 +58,7 @@ with open('gsheets.csv', mode='r', encoding='utf-8') as csv_file:
 
 @client.event
 async def on_member_join(member):
-    welcome_message = f"Welcome to the Spreadsheet Discord Server!, {member.mention}! For long detailed questions post in #questions, for short questions ask in #gsheets or #excel respectively. For more information on the best way to post your question see #rules, type !help in #general, or check out https://sheets.wiki/"
+    welcome_message = f"Welcome to the Spreadsheet Discord Server!, {member.mention}! For long detailed questions post in #questions, for short questions ask in #gsheets or #excel respectively. For more information on the best way to post your question type !help or check out https://sheets.wiki/"
     try:
         await member.send(welcome_message)
     except discord.Forbidden:
