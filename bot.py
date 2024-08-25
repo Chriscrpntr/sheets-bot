@@ -1,5 +1,7 @@
 import discord
 import csv
+
+from discord import app_commands
 from dotenv import load_dotenv
 import os
 from urllib.request import urlopen
@@ -29,6 +31,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
+tree = app_commands.CommandTree(client)
 
 commands = {
     "mockup": "You can use [this tool](https://docs.google.com/forms/d/e/1FAIpQLScf4e8rJpjbDx-SQOH2c2xIaUP-ewnNJoqv9uRAXIrenUvZ_Q/viewform) to create an anonymous mock-up! Please provide sample inputs AND outputs!",
@@ -86,5 +89,13 @@ async def on_message(message):
 
         else:
             await message.channel.send("Sorry, I don't recognize that command.")
+
+@tree.command(
+    name='search',
+    description='Search for an article on Sheets.wiki.')
+async def search_command(ctx, *, query):
+    result = search(query)
+    await ctx.respond(result)
+
 
 client.run(key)
