@@ -31,13 +31,15 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 commands = {
-    "help": "I can provide information on Excel and Google Sheets functions! Try `!excel` or `!gsheets` followed by the name of a function. I also have some general advice: `mockup`, `data`, `xy`, `structure`, and `wiki`.",
     "mockup": "You can use [this tool](https://docs.google.com/forms/d/e/1FAIpQLScf4e8rJpjbDx-SQOH2c2xIaUP-ewnNJoqv9uRAXIrenUvZ_Q/viewform) to create an anonymous mock-up! Please provide sample inputs AND outputs!",
     "data": "Please [don't ask to ask](https://dontasktoask.com/)!",
     "xy": "Your problem may be an [XY problem](https://xyproblem.info/), meaning you are asking how to make your solution work, rather than asking about the root problem. This can interfere with assistance—could you please provide information about the root causes?",
     "structure": "[Here's some advice](https://sheets.wiki/books/advice/taming-spreadsheet-data-structure-for-success/) by the excellent Aliafriend about properly formatting your data!",
-    "wiki": "You can find our wiki [here](https://sheets.wiki/)!"
+    "wiki": "You can find our wiki [here](https://sheets.wiki/)!",
+    "practice": "Here's a [practice sheet](https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412) for intermediate formulae!",
 }
+
+commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `!excel` or `!gsheets` followed by the name of a function. You can also use `!search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:" + '\n'.join([f"\n`!{command}`" for command in commands])
 
 excel_functions = {}
 with open('excel.csv', mode='r', encoding='utf-8') as csv_file:
