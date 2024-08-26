@@ -57,6 +57,16 @@ with open('gsheets.csv', mode='r', encoding='utf-8') as csv_file:
         gsheets_functions[row['Name'].lower()] = row
 
 @client.event
+async def on_member_join(member):
+    welcome_message = f"Welcome to the Spreadsheet Discord Server!, {member.mention}! For long detailed questions post in #questions, for short questions ask in #gsheets or #excel respectively. For more information on the best way to post your question type !help or check out https://sheets.wiki/"
+    try:
+        await member.send(welcome_message)
+    except discord.Forbidden:
+        # If the bot cannot send a DM to the user, you might want to handle it:
+        print(f"Could not send a welcome message to {member.name}")
+
+
+@client.event
 async def on_message(message):
     if message.author == client.user:
         return
