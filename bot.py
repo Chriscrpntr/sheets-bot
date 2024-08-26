@@ -93,7 +93,7 @@ async def on_message(message):
 @tree.command(
     name='search',
     description='Search for an article on Sheets.wiki.')
-async def search_command(ctx, *, query):
+async def search_command(ctx, *, query: str):
     result = search(query)
     await ctx.respond(result)
 
