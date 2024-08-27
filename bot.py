@@ -44,7 +44,7 @@ commands = {
     "practice": "Here's a [practice sheet](https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412) for intermediate formulae!",
 }
 
-commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `!excel` or `!gsheets` followed by the name of a function. You can also use `!search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:" + '\n'.join([f"\n`!{command}`" for command in commands])
+commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `/excel` or `/gsheets` followed by the name of a function. You can also use `/search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:'''" + '\n'.join([f"\n`/{command}`" for command in commands]) + "\n'''"
 
 excel_functions = {}
 with open('excel.csv', mode='r', encoding='utf-8') as csv_file:
@@ -60,7 +60,7 @@ with open('gsheets.csv', mode='r', encoding='utf-8') as csv_file:
 
 @client.event
 async def on_member_join(member):
-    welcome_message = f"Welcome to the Spreadsheet Discord Server!, {member.mention}! For long detailed questions post in #questions, for short questions ask in #gsheets or #excel respectively. For more information on the best way to post your question type !help or check out https://sheets.wiki/"
+    welcome_message = f"Welcome to the Spreadsheet Discord Server!, {member.mention}! For long detailed questions post in #questions, for short questions ask in #gsheets or #excel respectively. For more information on the best way to post your question type /help or check out https://sheets.wiki/"
     try:
         await member.send(welcome_message)
     except discord.Forbidden:
