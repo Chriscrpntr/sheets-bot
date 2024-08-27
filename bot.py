@@ -135,4 +135,9 @@ async def search_command(ctx, *, query: str):
     else:
         await ctx.response.send_message("That function isn't available!")
 
+@client.event
+async def on_ready():
+    await tree.sync()
+    print(f'Logged in as {client.user}')
+
 client.run(key)
