@@ -107,4 +107,30 @@ async def search_command(ctx, *, query: str):
     result = search(query)
     await ctx.response.send_message(result)
 
+@tree.command(
+    name='excel',
+    description='Search for an Excel function.')
+async def search_command(ctx, *, query: str):
+    if query in excel_functions:
+        func_info = excel_functions[query]
+        result = (f"{func_info['Name']}: {func_info['Description']}\n"
+                    f"Syntax: `{func_info['Syntax']}`\n"
+                    f"More info: {func_info['Link']}")
+        await ctx.response.send_message(result)
+    else:
+        await ctx.response.send_message("That function isn't available!")
+
+@tree.command(
+    name='gsheets',
+    description='Search for an gsheets function.')
+async def search_command(ctx, *, query: str):
+    if query in gsheets_functions:
+        func_info = gsheets_functions[query]
+        result = (f"{func_info['Name']}: {func_info['Description']}\n"
+                    f"Syntax: `{func_info['Syntax']}`\n"
+                    f"More info: {func_info['Link']}")
+        await ctx.response.send_message(result)
+    else:
+        await ctx.response.send_message("That function isn't available!")
+
 client.run(key)
