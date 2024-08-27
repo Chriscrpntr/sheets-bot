@@ -105,7 +105,6 @@ async def on_message(message):
     description='Search for an article on Sheets.wiki.')
 async def search_command(ctx, *, query: str):
     result = search(query)
-    await ctx.respond(result)
-
+    await ctx.response.send_message(result)
 
 client.run(key)
