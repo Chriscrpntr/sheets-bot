@@ -135,6 +135,55 @@ async def search_command(ctx, *, query: str):
     else:
         await ctx.response.send_message("That function isn't available!")
 
+@tree.command(
+    name='help',
+    description="Information regarding usage of the bot"
+)
+async def help_command(ctx):
+    await ctx.response.send_message(commands['help'])
+
+@tree.command(
+    name='mockup',
+    description= "Create an anonymous mock-up"
+)
+async def mockup_command(ctx):
+    await ctx.response.send_message(commands['mockup'])
+
+@tree.command(
+    name='data',
+    description= "Don't ask to ask"
+)
+async def data_command(ctx):
+    await ctx.response.send_message(commands['data'])
+
+@tree.command(
+    name='xy',
+    description= "Your problem may be an XY problem"
+)
+async def xy_command(ctx):
+    await ctx.response.send_message(commands['xy'])
+
+@tree.command(
+    name='structure',
+    description= "Advice on properly formatting your data"
+)
+async def structure_command(ctx):
+    await ctx.response.send_message(commands['structure'])
+
+@tree.command(
+    name='wiki',
+    description= "The Sheets Wiki"
+)
+async def wiki_command(ctx):
+    await ctx.response.send_message(commands['wiki'])
+
+@tree.command(
+    name='practice',
+    description= "A practice sheet for intermediate formulae!"
+)
+async def practice_command(ctx):
+    await ctx.response.send_message(commands['practice'])
+
 @client.event
 async def on_ready():
     await tree.sync()
