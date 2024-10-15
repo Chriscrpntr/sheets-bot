@@ -1,3 +1,5 @@
+import re
+
 import discord
 import csv
 
@@ -42,6 +44,7 @@ commands = {
     "structure": "[Here's some advice](https://sheets.wiki/books/advice/taming-spreadsheet-data-structure-for-success/) by the excellent Aliafriend about properly formatting your data!",
     "wiki": "You can find our wiki [here](https://sheets.wiki/)!",
     "practice": "Here's a [practice sheet](https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412) for intermediate formulae!",
+    "timestamp": "Here is a video by the amazing Dralkyr for timestamping on edit! https://youtu.be/dQw4w9WgXcQ"
 }
 
 commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `/excel` or `/gsheets` followed by the name of a function. You can also use `/search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:\n```" + '\n'.join([f"\n/{command}" for command in commands]) + "\n```"
@@ -72,7 +75,10 @@ async def on_member_join(member):
 async def on_message(message):
     if message.author == client.user:
         return
-    
+
+    if re.search(r"\bcan\s+someone\s+(help|assist)\b",message.content):
+        await message.channel.send(commands['data'])
+
     if message.content.startswith('!'):
         command = message.content.lstrip('!')
         split = command.lower().split(' ')
@@ -101,6 +107,7 @@ async def on_message(message):
 
         else:
             await message.channel.send("Sorry, I don't recognize that command.")
+
 
 @tree.command(
     name='search',
@@ -183,6 +190,13 @@ async def wiki_command(ctx):
 )
 async def practice_command(ctx):
     await ctx.response.send_message(commands['practice'])
+
+@tree.command(
+    name='timestamp',
+    description= "How to timestamp edits"
+)
+async def timestamp_command(ctx):
+    await ctx.response.send_message(commands['timestamp'])
 
 @client.event
 async def on_ready():
