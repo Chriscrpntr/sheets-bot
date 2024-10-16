@@ -44,7 +44,7 @@ commands = {
     "structure": "[Here's some advice](https://sheets.wiki/books/advice/taming-spreadsheet-data-structure-for-success/) by the excellent Aliafriend about properly formatting your data!",
     "wiki": "You can find our wiki [here](https://sheets.wiki/)!",
     "practice": "Here's a [practice sheet](https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412) for intermediate formulae!",
-    "timestamp": "Here is a video by the amazing Dralkyr for timestamping on edit! https://youtu.be/dQw4w9WgXcQ",
+    "timestamp": "Here is a video by the amazing Dralkyr for timestamping on edit! https://www.youtube.com/watch?v=DgqTftdXkTw",
 }
 
 commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `/excel` or `/gsheets` followed by the name of a function. You can also use `/search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:\n```" + '\n'.join([f"\n/{command}" for command in commands]) + "\n```"
