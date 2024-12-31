@@ -47,7 +47,16 @@ commands = {
     "timestamp": "[Here is a video](https://www.youtube.com/watch?v=DgqTftdXkTw) by the amazing Dralkyr for timestamping on edit!",
 }
 
+apis = {
+    "map": " Returns an example of map function usage within Google Sheets",
+    "scan": "Returns an example of scan function usage within Google Sheets",
+    "reduce": "Returns an example of reduce function usage within Google Sheets",
+    "lambda": "Returns an example of using lambda within Google Sheets",
+    "documentation": "Returns how to use let to incorporate documentation in your formulas for Google Sheets",
+}
+
 commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `/excel` or `/gsheets` followed by the name of a function. You can also use `/search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:\n```" + '\n'.join([f"\n/{command}" for command in commands]) + "\n```"
+commands['apis'] = "We have some Apis for in-sheet examples use =IMPORTDATA(\"https://aliafriend.com/api/sheets/examples/<endpoint>\") endpoints include:\n```" + '\n'.join([f"\n{api}" for api in apis]) + "\n```"
 
 excel_functions = {}
 with open('excel.csv', mode='r', encoding='utf-8') as csv_file:
@@ -197,6 +206,13 @@ async def practice_command(ctx):
 )
 async def timestamp_command(ctx):
     await ctx.response.send_message(commands['timestamp'])
+
+@tree.command(
+    name='apis',
+    description= "Information on the available Api's"
+)
+async def apis_command(ctx):
+    await ctx.response.send_message(commands['apis'])
 
 @client.event
 async def on_ready():
