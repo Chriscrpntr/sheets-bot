@@ -214,6 +214,19 @@ async def timestamp_command(ctx):
 async def apis_command(ctx):
     await ctx.response.send_message(commands['apis'])
 
+@tree.command(
+    name='localediff',
+    description= "Fix locale differences"
+)
+async def localdiff_command(ctx, *, input_text: str):
+    input_text = re.sub(r'\{([^}]*)', lambda match: match.group(0).replace(',', '\\'), input_text)
+
+    # Replace all other ',' with ';'
+    updated_text = re.sub(r',', ';', input_text)
+
+    # Send the updated text back
+    await ctx.response.send_message(f"Your Locale is different. You'll need to replace your , with ; \n\n```\n{updated_text}\n```")
+
 @client.event
 async def on_ready():
     await tree.sync()
