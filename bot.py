@@ -37,16 +37,6 @@ intents.members = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
-commands = {
-    "mockup": "You can use [this tool](https://docs.google.com/forms/d/e/1FAIpQLScf4e8rJpjbDx-SQOH2c2xIaUP-ewnNJoqv9uRAXIrenUvZ_Q/viewform) to create an anonymous mock-up! Please provide sample inputs AND outputs!",
-    "data": "Please [don't ask to ask](https://dontasktoask.com/)!",
-    "xy": "Your problem may be an [XY problem](https://xyproblem.info/), meaning you are asking how to make your solution work, rather than asking about the root problem. This can interfere with assistance—could you please provide information about the root causes?",
-    "structure": "[Here's some advice](https://sheets.wiki/books/advice/taming-spreadsheet-data-structure-for-success/) by the excellent Aliafriend about properly formatting your data!",
-    "wiki": "You can find our wiki [here](https://sheets.wiki/)!",
-    "practice": "Here's a [practice sheet](https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412) for intermediate formulae!",
-    "timestamp": "[Here is a video](https://www.youtube.com/watch?v=DgqTftdXkTw) by the amazing Dralkyr for timestamping on edit!",
-}
-
 apis = {
     "map": " Returns an example of map function usage within Google Sheets",
     "scan": "Returns an example of scan function usage within Google Sheets",
@@ -55,8 +45,25 @@ apis = {
     "documentation": "Returns how to use let to incorporate documentation in your formulas for Google Sheets",
 }
 
+gaslinks = {
+"ExcelGoogleSheets\nhttps://www.youtube.com/@ExcelGoogleSheets/search?query=apps%20script\n",
+"Ben Collins's\nhttps://courses.benlcollins.com/p/apps-script-blastoff\n",
+"Spencer Farris\nhttps://www.youtube.com/playlist?list=PLmE9Sui7JoQGqOJvhxYRjOFUtr5kMWUtJ\n",
+}
+
+commands = {
+    "data": "Please [don't ask to ask](https://dontasktoask.com/)!",
+    "mockup": "You can use [this tool](https://docs.google.com/forms/d/e/1FAIpQLScf4e8rJpjbDx-SQOH2c2xIaUP-ewnNJoqv9uRAXIrenUvZ_Q/viewform) to create an anonymous mock-up! Please provide sample inputs AND outputs!",
+    "xy": "Your problem may be an [XY problem](https://xyproblem.info/), meaning you are asking how to make your solution work, rather than asking about the root problem. This can interfere with assistance—could you please provide information about the root causes?",
+    "structure": "[Here's some advice](https://sheets.wiki/books/advice/taming-spreadsheet-data-structure-for-success/) by the excellent Aliafriend about properly formatting your data!",
+    "wiki": "You can find our wiki [here](https://sheets.wiki/)!",
+    "practice": "Here's a [practice sheet](https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412) for intermediate formulae!",
+    "timestamp": "[Here is a video](https://www.youtube.com/watch?v=DgqTftdXkTw) by the amazing Dralkyr for timestamping on edit!",
+    "apis" : "We have some Apis for in-sheet examples use =IMPORTDATA(\"https://aliafriend.com/api/sheets/examples/<endpoint>\") endpoints include:\n```" + '\n'.join([f"\n{api}" for api in apis]) + "\n```",
+    "learngas" : "Here are some links to start learning Google App Script!\n\n" + '\n'.join([f"\n{link}" for link in gaslinks]),
+}
+
 commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `/excel` or `/gsheets` followed by the name of a function. You can also use `/search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:\n```" + '\n'.join([f"\n/{command}" for command in commands]) + "\n```"
-commands['apis'] = "We have some Apis for in-sheet examples use =IMPORTDATA(\"https://aliafriend.com/api/sheets/examples/<endpoint>\") endpoints include:\n```" + '\n'.join([f"\n{api}" for api in apis]) + "\n```"
 
 excel_functions = {}
 with open('excel.csv', mode='r', encoding='utf-8') as csv_file:
@@ -226,6 +233,13 @@ async def localdiff_command(ctx, *, input_text: str):
 
     # Send the updated text back
     await ctx.response.send_message(f"Your Locale is different. You'll need to replace your , with ; \n\n```\n{updated_text}\n```")
+
+@tree.command(
+    name='learngas',
+    description= "Learn Google Apps Script Links"
+)
+async def learngas_command(ctx):
+    await ctx.response.send_message(commands['learngas'])
 
 @client.event
 async def on_ready():
