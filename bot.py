@@ -46,9 +46,16 @@ apis = {
 }
 
 gaslinks = {
-"ExcelGoogleSheets\nhttps://www.youtube.com/@ExcelGoogleSheets/search?query=apps%20script\n",
-"Ben Collins's\nhttps://courses.benlcollins.com/p/apps-script-blastoff\n",
-"Spencer Farris\nhttps://www.youtube.com/playlist?list=PLmE9Sui7JoQGqOJvhxYRjOFUtr5kMWUtJ\n",
+"ExcelGoogleSheets\n<https://www.youtube.com/@ExcelGoogleSheets/search?query=apps%20script>\n",
+"Ben Collins's\n<https://courses.benlcollins.com/p/apps-script-blastoff>\n",
+"Spencer Farris\n<https://www.youtube.com/playlist?list=PLmE9Sui7JoQGqOJvhxYRjOFUtr5kMWUtJ>\n",
+}
+
+notablelinks = {
+    "[Advanced Dropdown Setups](<https://docs.google.com/spreadsheets/d/1OlRIXjoaUG5Owjd3t9hGfmV7G8EmAKffP7YVPdNGNH0/edit?usp=sharing>)\n",
+    "[A History of Crash Bugs](<https://docs.google.com/spreadsheets/d/107B_jSpObwxxYfL_HTBWZtB9cnMQDTraoirpaRUsNLc/edit?gid=582260365#gid=582260365>)\n",
+    "[Community Practice Problems](<https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412#gid=890374412>)\n",
+
 }
 
 commands = {
@@ -59,8 +66,9 @@ commands = {
     "wiki": "You can find our wiki [here](https://sheets.wiki/)!",
     "practice": "Here's a [practice sheet](https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412) for intermediate formulae!",
     "timestamp": "[Here is a video](https://www.youtube.com/watch?v=DgqTftdXkTw) by the amazing Dralkyr for timestamping on edit!",
-    "apis" : "We have some Apis for in-sheet examples use =IMPORTDATA(\"https://aliafriend.com/api/sheets/examples/<endpoint>\") endpoints include:\n```" + '\n'.join([f"\n{api}" for api in apis]) + "\n```",
+    "apis" : "```We have some Apis for in-sheet examples! Endpoints include:\n" + '\n'.join([f"\n=IMPORTDATA(\"https://aliafriend.com/api/sheets/examples/{api}\")" for api in apis]) + "\n```",
     "learngas" : "Here are some links to start learning Google App Script!\n\n" + '\n'.join([f"\n{link}" for link in gaslinks]),
+    "links" : "Spreadsheet Collection\n\n" + '\n'.join([f"{link}" for link in notablelinks])
 }
 
 commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `/excel` or `/gsheets` followed by the name of a function. You can also use `/search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:\n```" + '\n'.join([f"\n/{command}" for command in commands]) + "\n```"
@@ -240,6 +248,13 @@ async def localdiff_command(ctx, *, input_text: str):
 )
 async def learngas_command(ctx):
     await ctx.response.send_message(commands['learngas'])
+
+@tree.command(
+    name='links',
+    description= "Notable Links From Our Collection."
+)
+async def links_command(ctx):
+    await ctx.response.send_message(commands['links'])
 
 @client.event
 async def on_ready():
