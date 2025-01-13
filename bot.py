@@ -68,7 +68,8 @@ commands = {
     "timestamp": "[Here is a video](https://www.youtube.com/watch?v=DgqTftdXkTw) by the amazing Dralkyr for timestamping on edit!",
     "apis" : "```We have some Apis for in-sheet examples! Endpoints include:\n" + '\n'.join([f"\n=IMPORTDATA(\"https://aliafriend.com/api/sheets/examples/{api}\")" for api in apis]) + "\n```",
     "learngas" : "Here are some links to start learning Google App Script!\n\n" + '\n'.join([f"\n{link}" for link in gaslinks]),
-    "links" : "Spreadsheet Collection\n\n" + '\n'.join([f"{link}" for link in notablelinks])
+    "links" : "Spreadsheet Collection\n\n" + '\n'.join([f"{link}" for link in notablelinks]),
+    "ddropdowns" : "Here is a video on how to create dependant dropdowns by the amazing Dralkyr!\n<https://www.youtube.com/watch?v=fHfVF5AaAjc>\n\nWe also have a sheet!\n[Advanced Dropdown Setups](<https://docs.google.com/spreadsheets/d/1OlRIXjoaUG5Owjd3t9hGfmV7G8EmAKffP7YVPdNGNH0/edit?usp=sharing>)\n"
 }
 
 commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `/excel` or `/gsheets` followed by the name of a function. You can also use `/search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:\n```" + '\n'.join([f"\n/{command}" for command in commands]) + "\n```"
@@ -255,6 +256,13 @@ async def learngas_command(ctx):
 )
 async def links_command(ctx):
     await ctx.response.send_message(commands['links'])
+
+@tree.command(
+    name='ddropdowns',
+    description= "How to create dependant dropdowns"
+)
+async def ddropdowns_command(ctx):
+    await ctx.response.send_message(commands['ddropdowns'])
 
 @client.event
 async def on_ready():
