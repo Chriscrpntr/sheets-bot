@@ -133,7 +133,7 @@ async def on_message(message):
         else:
             await message.channel.send("Sorry, I don't recognize that command.")
 
-
+@app_commands.user_install
 @tree.command(
     name='search',
     description='Search for an article on Sheets.wiki.')
@@ -141,6 +141,7 @@ async def search_command(ctx, *, query: str):
     result = search(query)
     await ctx.response.send_message(result)
 
+@app_commands.user_install
 @tree.command(
     name='excel',
     description='Search for an Excel function.')
@@ -154,6 +155,7 @@ async def search_command(ctx, *, query: str):
     else:
         await ctx.response.send_message("That function isn't available!")
 
+@app_commands.user_install
 @tree.command(
     name='gsheets',
     description='Search for an gsheets function.')
@@ -167,6 +169,8 @@ async def search_command(ctx, *, query: str):
     else:
         await ctx.response.send_message("That function isn't available!")
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='help',
     description="Information regarding usage of the bot"
@@ -174,6 +178,8 @@ async def search_command(ctx, *, query: str):
 async def help_command(ctx):
     await ctx.response.send_message(commands['help'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='mockup',
     description= "Create an anonymous mock-up"
@@ -181,6 +187,8 @@ async def help_command(ctx):
 async def mockup_command(ctx):
     await ctx.response.send_message(commands['mockup'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='data',
     description= "Don't ask to ask"
@@ -188,6 +196,8 @@ async def mockup_command(ctx):
 async def data_command(ctx):
     await ctx.response.send_message(commands['data'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='xy',
     description= "Your problem may be an XY problem"
@@ -195,6 +205,8 @@ async def data_command(ctx):
 async def xy_command(ctx):
     await ctx.response.send_message(commands['xy'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='structure',
     description= "Advice on properly formatting your data"
@@ -202,6 +214,8 @@ async def xy_command(ctx):
 async def structure_command(ctx):
     await ctx.response.send_message(commands['structure'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='wiki',
     description= "The Sheets Wiki"
@@ -209,6 +223,8 @@ async def structure_command(ctx):
 async def wiki_command(ctx):
     await ctx.response.send_message(commands['wiki'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='practice',
     description= "A practice sheet for intermediate formulae!"
@@ -216,6 +232,8 @@ async def wiki_command(ctx):
 async def practice_command(ctx):
     await ctx.response.send_message(commands['practice'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='timestamp',
     description= "How to timestamp edits"
@@ -223,6 +241,8 @@ async def practice_command(ctx):
 async def timestamp_command(ctx):
     await ctx.response.send_message(commands['timestamp'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='apis',
     description= "Information on the available Api's"
@@ -230,6 +250,8 @@ async def timestamp_command(ctx):
 async def apis_command(ctx):
     await ctx.response.send_message(commands['apis'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='localediff',
     description= "Fix locale differences"
@@ -243,6 +265,8 @@ async def localdiff_command(ctx, *, input_text: str):
     # Send the updated text back
     await ctx.response.send_message(f"Your Locale is different. You'll need to replace your , with ; \n\n```\n{updated_text}\n```")
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='learngas',
     description= "Learn Google Apps Script Links"
@@ -250,6 +274,8 @@ async def localdiff_command(ctx, *, input_text: str):
 async def learngas_command(ctx):
     await ctx.response.send_message(commands['learngas'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='links',
     description= "Notable Links From Our Collection."
@@ -257,6 +283,8 @@ async def learngas_command(ctx):
 async def links_command(ctx):
     await ctx.response.send_message(commands['links'])
 
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='ddropdowns',
     description= "How to create dependant dropdowns"
