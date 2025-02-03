@@ -101,6 +101,18 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    excluded_roles = ["Ultimate Newbie", "Spreadmin", "Spreadarator","Trustworthy Spreadsheeteer","BOTS"]
+
+    user_roles = [role.name for role in message.author.roles]
+    does_not_have_roles = not any(role in excluded_roles for role in user_roles)
+
+    contains_mentions = len(message.mentions) > 0
+
+    is_reply = message.reference is not None
+
+    if does_not_have_roles and contains_mentions and not is_reply:
+        await message.channel.send(f"{message.author.mention}, Please do not @ mention as specified in the rules.")
+
     if re.search(r"\bcan\s+someone\s+(help|assist)\b",message.content):
         await message.channel.send(commands['data'])
 
