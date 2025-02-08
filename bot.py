@@ -1,5 +1,5 @@
 import re
-
+import syntaxCheck
 import discord
 import csv
 
@@ -101,7 +101,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    excluded_roles = ["Ultimate Newbie", "Spreadmin", "Spreadarator","Trustworthy Spreadsheeteer","BOTS"]
+    excluded_roles = ["Ultimate Newbie", "Spreadmin", "Spreadarator","Trustworthy Spreadsheeter","BOTS"]
 
     user_roles = [role.name for role in message.author.roles]
     does_not_have_roles = not any(role in excluded_roles for role in user_roles)
@@ -110,7 +110,11 @@ async def on_message(message):
 
     is_reply = message.reference is not None
 
-    if does_not_have_roles and contains_mentions and not is_reply:
+    offender_list = ["aliafriend"]
+
+    is_offender = str(message.author) in offender_list or str(message.author.id) in offender_list
+
+    if does_not_have_roles and contains_mentions and not is_reply and is_offender:
         await message.channel.send(f"{message.author.mention}, Please do not @ mention as specified in the rules.")
 
     if re.search(r"\bcan\s+someone\s+(help|assist)\b",message.content):
@@ -303,6 +307,15 @@ async def links_command(ctx):
 )
 async def ddropdowns_command(ctx):
     await ctx.response.send_message(commands['ddropdowns'])
+
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+@tree.command(
+    name='syntax',
+    description= "Checks for missing commas or parentheses. Warning still in alpha."
+)
+async def syntaxcheck(ctx, *, input_text: str):
+    await ctx.response.send_message(syntaxCheck.validate_formula(input_text))
 
 @client.event
 async def on_ready():
