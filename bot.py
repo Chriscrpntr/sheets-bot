@@ -54,8 +54,8 @@ gaslinks = {
 notablelinks = {
     "[Advanced Dropdown Setups](<https://docs.google.com/spreadsheets/d/1OlRIXjoaUG5Owjd3t9hGfmV7G8EmAKffP7YVPdNGNH0/edit?usp=sharing>)\n",
     "[A History of Crash Bugs](<https://docs.google.com/spreadsheets/d/107B_jSpObwxxYfL_HTBWZtB9cnMQDTraoirpaRUsNLc/edit?gid=582260365#gid=582260365>)\n",
+    "[Color Themes](<https://docs.google.com/spreadsheets/d/1Bj5appk-AAGPXuN4gUWfXAQYS772DKmByKqG5owKNzA/edit?usp=sharing>)\n",
     "[Community Practice Problems](<https://docs.google.com/spreadsheets/d/1RZVTUJj_qzugq_WCd7rMjmjzKtUM72Jb5x0RGFAVNnk/edit?gid=890374412#gid=890374412>)\n",
-
 }
 
 commands = {
@@ -149,7 +149,8 @@ async def on_message(message):
         else:
             await message.channel.send("Sorry, I don't recognize that command.")
 
-@app_commands.user_install
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='search',
     description='Search for an article on Sheets.wiki.')
@@ -157,7 +158,8 @@ async def search_command(ctx, *, query: str):
     result = search(query)
     await ctx.response.send_message(result)
 
-@app_commands.user_install
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='excel',
     description='Search for an Excel function.')
@@ -171,7 +173,8 @@ async def search_command(ctx, *, query: str):
     else:
         await ctx.response.send_message("That function isn't available!")
 
-@app_commands.user_install
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 @tree.command(
     name='gsheets',
     description='Search for an gsheets function.')
@@ -315,7 +318,7 @@ async def ddropdowns_command(ctx):
     description= "Checks for missing commas or parentheses. Warning still in alpha."
 )
 async def syntaxcheck(ctx, *, input_text: str):
-    await ctx.response.send_message(syntaxCheck.validate_formula(input_text))
+    await ctx.response.send_message("```\n"+ input_text+ "```\n" + syntaxCheck.validate_formula(input_text))
 
 @client.event
 async def on_ready():

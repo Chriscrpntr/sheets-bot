@@ -26,7 +26,7 @@ def find_unmatched_parenthesis(formula):
     - A descriptive error message, pinpointing the unmatched parentheses issue.
     """
     # Regex to match all parentheses
-    parentheses = re.finditer(r'[()]', formula)
+    parentheses = re.finditer(r'[{()]', formula)
     stack = []
     positions = []  # Keeps track of parenthesis positions for error reporting
 
@@ -165,6 +165,26 @@ def validate_vlookup(formula):
     elif formula.count(',') < 3:
         return "Error: Missing Comma"
 
+def validate_textjoin(formula):
+    start = formula.find("(")
+    end = find_matching_parenthesis(formula, start + 1)
+
+    if end == -1:
+        return "Error: Mismatched parentheses in `Textjoin` formula"
+
+    content = formula[start + 1:end].strip()
+    parts = split_at_top_level(content)  # Split into top-level sections
+    if len(parts) < 4:
+        return "Error: Incomplete `TEXTJOIN` formula (missing arguments expected at least 3)"
+    if parts[2] != '0' and parts[2] != '1' and parts[2] != "FALSE" and parts[2] !="TRUE":
+        return "Error: Incorrect Argument 2 in `TEXTJOIN` formula"
+
+    # **Step 1**: Validate all nested functions (IF, VLOOKUP, etc.)
+    nested_validation_error = extract_and_validate_nested_functions(parts)
+    if nested_validation_error:
+        return nested_validation_error  # Bubble up the error message
+    return "Generic TEXTJOIN formula error: Still in testing."
+
 def extract_and_validate_nested_functions(parts):
     """
     Extracts and validates all nested functions (e.g., IF, VLOOKUP, etc.)
@@ -186,6 +206,10 @@ def extract_and_validate_nested_functions(parts):
                 nested_result = validate_vlookup(part)
                 if "Error" in nested_result:
                     return f"Error in nested `VLOOKUP` formula `{part}`: {nested_result}"
+            elif "TEXTJOIN(" in part.upper():
+                nested_result = validate_textjoin(part)
+                if "Error" in nested_result:
+                        return f"Error in nested `TEXTJOIN` formula `{part}`: {nested_result}"
     return None  # No errors found
 
 
@@ -287,6 +311,9 @@ def validate_formula(formula):
 
     if formula.count('VLOOKUP') > 0:
         return validate_vlookup(formula)
+
+    if formula.count('TEXTJOIN') > 0:
+        return validate_textjoin(formula)
 
 
     return "Unaccounted For Error Still In Beta"
