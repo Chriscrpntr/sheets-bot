@@ -2,7 +2,7 @@ import re
 import syntaxCheck
 import discord
 import csv
-
+from discord.ui import Button, View
 from discord import app_commands
 from dotenv import load_dotenv
 import os
@@ -320,9 +320,93 @@ async def ddropdowns_command(ctx):
 async def syntaxcheck(ctx, *, input_text: str):
     await ctx.response.send_message("```\n"+ input_text+ "```\n" + syntaxCheck.validate_formula(input_text))
 
+PERMANENT_EMBED_MESSAGE_ID = None  # Replace with the ID if you're restarting the bot.
+
 @client.event
 async def on_ready():
     await tree.sync()
     print(f'Logged in as {client.user}')
+    # Channel ID where the 'permanent' embed will reside
+    channel_id = os.getenv('channel')  # Replace with your target channel's ID
+    channel_id = int(channel_id)
+    global PERMANENT_EMBED_MESSAGE_ID
+
+    # Fetch the target channel
+    channel = client.get_channel(channel_id)
+    if not channel:
+        print("Channel not found or bot lacks permissions.")
+        return
+
+    # Check if the embed message already exists
+    if PERMANENT_EMBED_MESSAGE_ID:
+        try:
+            # Retrieve the existing embed message
+            message = await channel.fetch_message(PERMANENT_EMBED_MESSAGE_ID)
+            print("Permanent embed found. Checking for updates...")
+
+            # Update the embed dynamically to match any changes
+            embed = create_embed()  # Get the latest version of the embed
+
+            anonButton = Button(
+                label="Create Mockup",
+                style=discord.ButtonStyle.link,
+                url="https://docs.google.com/forms/d/e/1FAIpQLScf4e8rJpjbDx-SQOH2c2xIaUP-ewnNJoqv9uRAXIrenUvZ_Q/viewform"
+            )
+
+            view = View()
+            view.add_item(anonButton)
+
+            await message.edit(embed=embed, view=view)
+            print("Permanent embed updated successfully.")
+
+        except discord.NotFound:
+            # If the message is not found (e.g., deleted), recreate it
+            message = await channel.send(embed=create_embed())
+            PERMANENT_EMBED_MESSAGE_ID = message.id
+            save_message_id(PERMANENT_EMBED_MESSAGE_ID)
+        except discord.Forbidden:
+            print("Bot doesn't have permission to fetch messages.")
+    else:
+        # If no message ID exists, send a new embed
+        message = await channel.send(embed=create_embed())
+        PERMANENT_EMBED_MESSAGE_ID = message.id
+        save_message_id(PERMANENT_EMBED_MESSAGE_ID)
+
+
+def create_embed():
+    """Create an embed object."""
+    embed = discord.Embed(
+        title="Spreadsheet Discord",
+        description="Below are some useful tools and links. Remember don't ask to ask!",
+        color=discord.Color.blue(),
+    )
+    embed.add_field(name="Our Sheets Wiki!", value="[Sheets Wiki](https://sheets.wiki)", inline=False)
+    embed.add_field(name="Create Mockup", value="[Link](https://docs.google.com/forms/d/e/1FAIpQLScf4e8rJpjbDx-SQOH2c2xIaUP-ewnNJoqv9uRAXIrenUvZ_Q/viewform) to create an anonymous sheet", inline=False)
+    embed.add_field(name="Dependant Dropdowns", value="[Advanced Dropdowns](https://docs.google.com/spreadsheets/d/1OlRIXjoaUG5Owjd3t9hGfmV7G8EmAKffP7YVPdNGNH0/edit?gid=623087740#gid=623087740)\n"
+                                                      "[Video by Dralkyr!](https://www.youtube.com/watch?v=fHfVF5AaAjc)", inline=False)
+    embed.add_field(name="Data Structure", value="[Data Structure](https://sheets.wiki/books/advice/taming-spreadsheet-data-structure-for-success/) is very"
+                                                " useful to learn for a better sheets experience.", inline=False)
+    embed.add_field(name="Timestamping Edits", value="[How to timestamp edits by Dralkyr!](https://www.youtube.com/watch?v=DgqTftdXkTw)", inline=False)
+    return embed
+
+
+
+def save_message_id(message_id):
+    """Save the message ID to a file or database (for persistence). Here, we're using a file."""
+    with open("embed_message_id.txt", "w") as file:
+        file.write(str(message_id))
+
+
+def load_message_id():
+    """Load the message ID from a file or database."""
+    try:
+        with open("embed_message_id.txt", "r") as file:
+            return int(file.read().strip())
+    except (FileNotFoundError, ValueError):
+        return None
+
+
+# Load the message ID on startup
+PERMANENT_EMBED_MESSAGE_ID = load_message_id()
 
 client.run(key)
