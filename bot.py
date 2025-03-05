@@ -10,6 +10,8 @@ from urllib.request import urlopen
 import xmltodict
 from thefuzz import fuzz
 from thefuzz import process
+from googleapiclient.discovery import build
+from google.oauth2.service_account import Credentials
 
 # Load the sitemap from the Sheets Wiki
 file = urlopen('https://sheets.wiki/sitemap.xml')
@@ -69,7 +71,8 @@ commands = {
     "apis" : "```We have some Apis for in-sheet examples! Endpoints include:\n" + '\n'.join([f"\n=IMPORTDATA(\"https://aliafriend.com/api/sheets/examples/{api}\")" for api in apis]) + "\n```",
     "learngas" : "Here are some links to start learning Google App Script!\n\n" + '\n'.join([f"\n{link}" for link in gaslinks]),
     "links" : "Spreadsheet Collection\n\n" + '\n'.join([f"{link}" for link in notablelinks]),
-    "ddropdowns" : "Here is a video on how to create dependant dropdowns by the amazing Dralkyr!\n<https://www.youtube.com/watch?v=fHfVF5AaAjc>\n\nWe also have a sheet!\n[Advanced Dropdown Setups](<https://docs.google.com/spreadsheets/d/1OlRIXjoaUG5Owjd3t9hGfmV7G8EmAKffP7YVPdNGNH0/edit?usp=sharing>)\n"
+    "ddropdowns" : "Here is a video on how to create dependant dropdowns by the amazing Dralkyr!\n<https://www.youtube.com/watch?v=fHfVF5AaAjc>\n\nWe also have a sheet!\n[Advanced Dropdown Setups](<https://docs.google.com/spreadsheets/d/1OlRIXjoaUG5Owjd3t9hGfmV7G8EmAKffP7YVPdNGNH0/edit?usp=sharing>)\n",
+    "discord" : "Spreadsheets Discord Link.\n<https://discord.gg/M9GKpPd>",
 }
 
 commands['help'] = "I can provide information on Excel and Google Sheets functions! Try `/excel` or `/gsheets` followed by the name of a function. You can also use `/search` followed by a search query to find a relevant article on the Sheets Wiki. Other commands include:\n```" + '\n'.join([f"\n/{command}" for command in commands]) + "\n```"
@@ -119,6 +122,14 @@ async def on_message(message):
 
     if re.search(r"\bcan\s+someone\s+(help|assist)\b",message.content):
         await message.channel.send(commands['data'])
+
+    if message.channel.name == "gsheets" or message.channel.name == "excel" or message.channel.name == "questions" or message.channel.name == "general" or message.channel.name == "puzzle-general":
+        if re.search(r'(https://docs\.google\.com/spreadsheets/d/[A-Za-z0-9_-]+)', message.content):
+            match = re.search(r'https://docs\.google\.com/spreadsheets/d/([A-Za-z0-9_-]+)', message.content)
+            sheet_id = match.group(1)  # This captures only the ID after 'd/'
+
+            if not check_edit_permission(sheet_id):  # Pass the sheet ID to the function
+                await message.channel.send(f"Please open your spreadsheets to edits or use [Link](https://docs.google.com/forms/d/e/1FAIpQLScf4e8rJpjbDx-SQOH2c2xIaUP-ewnNJoqv9uRAXIrenUvZ_Q/viewform) to create an anonymous sheet for assistance.")
 
     if message.content.startswith('!'):
         command = message.content.lstrip('!')
@@ -320,6 +331,17 @@ async def ddropdowns_command(ctx):
 async def syntaxcheck(ctx, *, input_text: str):
     await ctx.response.send_message("```\n"+ input_text+ "```\n" + syntaxCheck.validate_formula(input_text))
 
+
+
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+@tree.command(
+    name='discord',
+    description= "Spreadsheets Discord Link."
+)
+async def links_command(ctx):
+    await ctx.response.send_message(commands['discord'])
+
 PERMANENT_EMBED_MESSAGE_ID = None  # Replace with the ID if you're restarting the bot.
 
 @client.event
@@ -376,7 +398,7 @@ async def on_ready():
 def create_embed():
     """Create an embed object."""
     embed = discord.Embed(
-        title="Spreadsheet Discord",
+        title="Spreadsheets Discord",
         description="Below are some useful tools and links. Remember don't ask to ask!",
         color=discord.Color.blue(),
     )
@@ -387,6 +409,7 @@ def create_embed():
     embed.add_field(name="Data Structure", value="[Data Structure](https://sheets.wiki/books/advice/taming-spreadsheet-data-structure-for-success/) is very"
                                                 " useful to learn for a better sheets experience.", inline=False)
     embed.add_field(name="Timestamping Edits", value="[How to timestamp edits by Dralkyr!](https://www.youtube.com/watch?v=DgqTftdXkTw)", inline=False)
+    embed.add_field(name="Addon", value="Our [Addon](https://script.google.com/d/1H6CQs7kWQtZ49lumL154_SyjSSrMGAYst4EWuOzKh2iaDNh2R8LvBcWk/edit?usp=sharing) that has some useful tools. [Install Guide](https://docs.google.com/spreadsheets/d/1FC7fZi7S_cjAvetYlRVyCKI4X7XFI8WIsbh-ePLGJj4/edit?usp=sharing)", inline=False)
     return embed
 
 
@@ -404,6 +427,28 @@ def load_message_id():
             return int(file.read().strip())
     except (FileNotFoundError, ValueError):
         return None
+
+def check_edit_permission(file_id):
+    # Authenticate using a service account
+    try:
+        creds = Credentials.from_service_account_file("service.json", scopes=[
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive"
+        ])
+
+        # Build the Drive API service
+        service = build('drive', 'v3', credentials=creds)
+
+        # Get the permissions
+        permissions = service.permissions().list(fileId=file_id).execute()
+
+        # Check for 'anyone' permission with 'writer' role
+        for permission in permissions.get("permissions", []):
+            if permission.get("type") == "anyone" and permission.get("role") == "writer":
+                return True  # Anyone with the link can edit
+    except:
+        pass
+    return False  # No "Anyone with the link can edit" permission
 
 
 # Load the message ID on startup
